@@ -5,7 +5,7 @@ provider "aws" {
 
 variable "my_ami" {
   type    = "string"
-  default = "ami-14c5486b"
+  default = "ami-b70554c8"
 }
 
 variable "my_subnet" {
@@ -18,9 +18,12 @@ variable "my_key" {
   default = "amzn-detwa-east"
 }
 
-variable "my_jenkins_secgroups" {
+variable "my_pipeline_secgroups" {
   type    = "list"
   default = ["sg-4699420d","sg-01954e4a","sg-c213c889"]
 }
 
-  
+variable "my_route53_zone_id" {
+  type    = "string"
+  default = "Z20NBA4QJSYPCC"
+}
