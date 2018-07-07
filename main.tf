@@ -19,7 +19,7 @@ resource "aws_instance" "concourse" {
     connection {
       type     = "ssh"
       user     = "ec2-user"
-      private_key = "${file("/users/sal/.ssh/id_rsa")}"
+      private_key = "${file("/home/sal/.ssh/id_rsa")}"
     }
   }
 }
