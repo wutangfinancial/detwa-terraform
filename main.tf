@@ -2,7 +2,7 @@ resource "aws_instance" "concourse" {
   ami = "${var.my_ami}"
   subnet_id = "${var.my_subnet}"
   key_name = "${var.my_key}"
-  vpc_security_group_ids = ["${var.my_pipeline_secgroups}"]
+  vpc_security_group_ids = ["${var.my_concourse_web_secgroups}"]
   instance_type = "t2.nano"
   disable_api_termination = true
   
