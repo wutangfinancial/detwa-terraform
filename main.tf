@@ -15,6 +15,11 @@ resource "aws_instance" "concourse" {
       "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash",
       "sudo hab svc status",
     ]
+    
+    connection {
+      type     = "ssh"
+      user     = "ec2-user"
+    }
   }
 }
 
