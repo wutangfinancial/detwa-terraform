@@ -1,4 +1,4 @@
-resource "aws_instance" "pipeline" {
+resource "aws_instance" "concourse" {
   ami = "${var.my_ami}"
   subnet_id = "${var.my_subnet}"
   key_name = "${var.my_key}"
@@ -7,17 +7,20 @@ resource "aws_instance" "pipeline" {
   disable_api_termination = true
   
   tags {
-    Name = "pipeline"
+    Name = "concourse"
   }
 
-  provisioner "local-exec" {
-    command = "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash"
+  provisioner "remote-exec" {
+    inline = [
+      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash",
+      "sudo hab svc status",
+    ]
   }
 }
 
-resource "aws_route53_record" "pipeline" {
+resource "aws_route53_record" "concourse" {
   zone_id = "${var.my_route53_zone_id}"
-  name    = "pipeline.detwah.com"
+  name    = "concourse.detwah.com"
   type    = "A"
   ttl     = "300"
   records = ["${aws_instance.pipeline.public_ip}"]
