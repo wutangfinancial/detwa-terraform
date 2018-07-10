@@ -67,5 +67,5 @@ resource "aws_route53_record" "postgres" {
   name    = "postgres.detwah.com"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.concourse.public_ip}"]
+  records = ["${aws_instance.postgres.public_ip}"]
 }
