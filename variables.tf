@@ -23,6 +23,11 @@ variable "my_concourse_web_secgroups" {
   default = ["sg-4699420d","sg-01954e4a","sg-c213c889","sg-8199a3ca","sg-ee83b9a5"]
 }
 
+variable "my_postgres_secgroups" {
+  type    = "list"
+  default = ["sg-4699420d","sg-01954e4a","sg-4699420d"]
+}
+
 variable "my_route53_zone_id" {
   type    = "string"
   default = "Z20NBA4QJSYPCC"
