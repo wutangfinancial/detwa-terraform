@@ -1,5 +1,5 @@
 provider "aws" {
-  version = "~> 1.23"
+  version = "~> 1.27"
   region = "us-east-1"
 }
 
@@ -20,12 +20,17 @@ variable "my_key" {
 
 variable "my_concourse_web_secgroups" {
   type    = "list"
-  default = ["sg-4699420d","sg-01954e4a","sg-c213c889","sg-8199a3ca","sg-ee83b9a5"]
+  default = ["sg-01954e4a","sg-f915f0b3","sg-005fba4a"]
 }
 
-variable "my_postgres_secgroups" {
+variable "my_concourse_worker_secgroups" {
   type    = "list"
-  default = ["sg-4699420d","sg-01954e4a","sg-4699420d"]
+  default = ["sg-01954e4a","sg-6805e022","sg-005fba4a"]
+}
+
+variable "my_postgresdb_secgroups" {
+  type    = "list"
+  default = ["sg-01954e4a","sg-873a2fcc","sg-005fba4a"]
 }
 
 variable "my_route53_zone_id" {
