@@ -33,6 +33,11 @@ variable "my_postgresdb_secgroups" {
   default = ["sg-01954e4a","sg-873a2fcc","sg-005fba4a"]
 }
 
+variable "my_bastion_ring_secgroups" {
+  type    = "list"
+  default = ["sg-01954e4a","sg-005fba4a"]
+}
+
 variable "my_route53_zone_id" {
   type    = "string"
   default = "Z20NBA4QJSYPCC"
