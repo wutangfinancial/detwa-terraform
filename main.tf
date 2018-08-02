@@ -124,7 +124,7 @@ resource "aws_instance" "narya" {
   provisioner "remote-exec" {
     inline = [
       "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap-nostart.sh | sudo bash",
-      "nohup sudo hab sup run --permanent-peer --peer=${aws_instance.nenya.private_ip} --peer=${aws_instance.vilya.private_ip} &",
+      "nohup sudo hab sup run --permanent-peer --peer=vilya.detwah.com --peer=nenya.detwah.com &",
     ]
     
     connection {
@@ -161,7 +161,7 @@ resource "aws_instance" "nenya" {
   provisioner "remote-exec" {
     inline = [
       "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap-nostart.sh | sudo bash",
-      "nohup sudo hab sup run --permanent-peer --peer=${aws_instance.vilya.private_ip} --peer=${aws_instance.narya.private_ip} &",
+      "nohup sudo hab sup run --permanent-peer --peer=vilya.detwah.com --peer=narya.detwah.com &",
     ]
     
     connection {
@@ -198,7 +198,7 @@ resource "aws_instance" "vilya" {
   provisioner "remote-exec" {
     inline = [
       "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap-nostart.sh | sudo bash",
-      "nohup sudo hab sup run --permanent-peer --peer=${aws_instance.nenya.private_ip} --peer=${aws_instance.narya.private_ip} &",
+      "nohup sudo hab sup run --permanent-peer --peer=nenya.detwah.com --peer=narya.detwah.com &",
     ]
     
     connection {
