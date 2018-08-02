@@ -118,12 +118,13 @@ resource "aws_instance" "narya" {
   disable_api_termination = true
   
   tags {
-    Name = "habitat"
+    Name = "hab-bastion-narya"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash",
+      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap-nostart.sh | sudo bash",
+      "nohup sudo hab sup run --permanent-peer --peer=${aws_instance.nenya.private_ip} --peer=${aws_instance.vilya.private_ip} &",
     ]
     
     connection {
@@ -154,12 +155,13 @@ resource "aws_instance" "nenya" {
   disable_api_termination = true
   
   tags {
-    Name = "habitat"
+    Name = "hab-bastion-nenya"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash",
+      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap-nostart.sh | sudo bash",
+      "nohup sudo hab sup run --permanent-peer --peer=${aws_instance.vilya.private_ip} --peer=${aws_instance.narya.private_ip} &",
     ]
     
     connection {
@@ -190,12 +192,13 @@ resource "aws_instance" "vilya" {
   disable_api_termination = true
   
   tags {
-    Name = "habitat"
+    Name = "hab-bastion-vilya"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash",
+      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap-nostart.sh | sudo bash",
+      "nohup sudo hab sup run --permanent-peer --peer=${aws_instance.nenya.private_ip} --peer=${aws_instance.narya.private_ip} &",
     ]
     
     connection {
