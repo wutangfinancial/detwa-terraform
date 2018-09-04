@@ -1,107 +1,68 @@
+# aws/config/my_ami:ami-04681a1dbd79675a5
+# aws/config/my_route53_zone_id:Z20NBA4QJSYPCC
+# aws/config/my_ssh_key:amzn-detwa-east
+# aws/config/my_subnet:subnet-3805d964
+
+resource "consul_keys" "my_ami" {
+  key {
+    name    = "my_ami"
+    path    = "aws/config/my_ami"
+  }
+}
+
+resource "consul_keys" "my_route53_zone_id" {
+  key {
+    name    = "my_route53_zone_id"
+    path    = "aws/config/my_route53_zone_id"
+  }
+}
+
+resource "consul_keys" "my_ssh_key" {
+  key {
+    name    = "my_ssh_key"
+    path    = "aws/config/my_ssh_key"
+  }
+}
+
+resource "consul_keys" "my_subnet" {
+  key {
+    name    = "my_subnet"
+    path    = "aws/config/my_subnet"
+  }
+}
+
 ###############################################################################
-# Concourse Web Instance
+# Jenkins Instance
 ###############################################################################
-resource "aws_instance" "concourse" {
-  ami = "${var.my_ami}"
-  subnet_id = "${var.my_subnet}"
-  key_name = "${var.my_key}"
-  vpc_security_group_ids = ["${var.my_concourse_web_secgroups}"]
+resource "aws_instance" "jenkins" {
+  ami = "${consul_keys.my_ami.var.my_ami}"
+  subnet_id = "${consul_keys.my_subnet.var.my_subnet}"
+  key_name = "${consul_keys.my_ssh_key.var.my_ssh_key}"
+  # vpc_security_group_ids = ["${var.my_concourse_web_secgroups}"]
   instance_type = "t2.nano"
   disable_api_termination = true
-  
+
   tags {
-    Name = "concourse"
+    Name = "jenkins"
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash",
+     inline = [
+      "sudo yum -y install jenkins",
     ]
-    
+
     connection {
       type     = "ssh"
       user     = "ec2-user"
-      private_key = "${file("/home/sal/.ssh/id_rsa")}"
+      private_key = "${file("/Users/asalowi1/.ssh/amzn-detwa-east.pub")}"
     }
   }
 }
 
-resource "aws_route53_record" "concourse" {
-  zone_id = "${var.my_route53_zone_id}"
-  name    = "concourse.detwah.com"
+resource "aws_route53_record" "jenkins" {
+  zone_id = "${consul_keys.my_route53_zone_id.var.my_route53_zone_id}"
+  name    = "jenkins.detwah.com"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.concourse.public_ip}"]
-}
-
-###############################################################################
-# Concourse Worker Instance
-###############################################################################
-resource "aws_instance" "concourse-worker" {
-  ami = "${var.my_ami}"
-  subnet_id = "${var.my_subnet}"
-  key_name = "${var.my_key}"
-  vpc_security_group_ids = ["${var.my_concourse_worker_secgroups}"]
-  instance_type = "t2.nano"
-  disable_api_termination = true
-  
-  tags {
-    Name = "concourse-worker"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash",
-    ]
-    
-    connection {
-      type     = "ssh"
-      user     = "ec2-user"
-      private_key = "${file("/home/sal/.ssh/id_rsa")}"
-    }
-  }
-}
-
-resource "aws_route53_record" "concourse-worker" {
-  zone_id = "${var.my_route53_zone_id}"
-  name    = "concourse-worker.detwah.com"
-  type    = "A"
-  ttl     = "300"
-  records = ["${aws_instance.concourse-worker.public_ip}"]
-}
-
-###############################################################################
-# PostgresDB Instance
-###############################################################################
-resource "aws_instance" "postgresdb" {
-  ami = "${var.my_ami}"
-  subnet_id = "${var.my_subnet}"
-  key_name = "${var.my_key}"
-  vpc_security_group_ids = ["${var.my_postgresdb_secgroups}"]
-  instance_type = "t2.nano"
-  disable_api_termination = true
-  
-  tags {
-    Name = "postgresdb"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "curl https://raw.githubusercontent.com/wutangfinancial/my_hab_bootstrap/master/bootstrap.sh | sudo bash",
-    ]
-    
-    connection {
-      type     = "ssh"
-      user     = "ec2-user"
-      private_key = "${file("/home/sal/.ssh/id_rsa")}"
-    }
-  }
-}
-
-resource "aws_route53_record" "postgresdb" {
-  zone_id = "${var.my_route53_zone_id}"
-  name    = "postgresdb.detwah.com"
-  type    = "A"
-  ttl     = "300"
-  records = ["${aws_instance.postgresdb.public_ip}"]
+  records = ["${aws_instance.jenkins.public_ip}"]
 }
